@@ -15,23 +15,44 @@ int main() {
 
     system("cls");
 
-    // [Read JSON File]
-    ifstream readJson("src/data/test.json");
+    // // [Read JSON File]
+    // ifstream readJson("src/data/test.json");
 
-    if (!readJson.is_open()) {
-        cout << "Unable to open file" << endl;
-        return 1;
-    }
-    json data;
-    readJson >> data;
+    // if (!readJson.is_open()) {
+    //     cout << "Unable to open file" << endl;
+    //     return 1;
+    // }
+    // json data;
+    // readJson >> data;
 
-    string name = data["question"][0]["title"];
+    // string name = data["question"][0]["title"];
 
-    cout << name << endl;
+    // cout << name << endl;
 
     // [Write JSON File]
-    ofstream writeJson("src/data/write.json");
-    writeJson << setw(4) << data << endl;
+    json mockupWriteJsonData = {
+        {"id", "UUID_4_ID"},
+        {"author", "Poorin Thatsakhon"},
+        {"title", "Quiz title (Exapmle)"},
+        {"description", ""},
+        {"questionList", {
+            {
+                {"no", 1},
+                {"title", "What's this?"},
+                {"question", {
+                    {"A", "This is A"},
+                    {"B", "This is B"},
+                    {"C", "This is C"},
+                    {"D", "This is D"},
+                    {"answer", "A"}
+                }},
+                {"difficulty", "easy"},
+                {"point", 1}
+            }
+        }}
+    };
+    ofstream writeJson("src/data/testWriteJsonFile.json");
+    writeJson << setw(4) << mockupWriteJsonData << endl;
 
     return 0;
        
