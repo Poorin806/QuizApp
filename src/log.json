@@ -1,0 +1,28 @@
+[
+	{
+		"quizId": "UUID4_quizId",
+		"history": [
+			{
+				"score": 12,
+				"timeStamp": "2024-21-7 (00:00:00 AM)"
+			},
+			{
+				"score": 31,
+				"timeStamp": "2024-21-7 (00:01:00 AM)"
+			}
+		]
+	},
+	{
+		"quizId": "UUID4_quizId",
+		"history": [
+			{
+				"score": 82,
+				"timeStamp": "2024-21-7 (00:12:00 AM)"
+			},
+			{
+				"score": 55,
+				"timeStamp": "2024-21-7 (00:34:00 AM)"
+			}
+		]
+	}
+]

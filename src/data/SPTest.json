@@ -1,0 +1,21 @@
+{
+	"quizId": "UUID4_quizId",
+	"author": "Poorin Thatsakhon",
+	"title": "Mid-term Structure Programming Test",
+	"description": "Choose only correct answer (20 Points)",
+	"questionList": [
+		{
+			"no": 1,
+			"title": "What is this?",
+			"question": {
+				"A": "This is A",
+				"B": "This is B",
+				"C": "This is C",
+				"D": "This is D",
+				"answer": "A"
+			},
+			"difficulty": "easy",
+			"point": 1
+		}
+	]
+}
