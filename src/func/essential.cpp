@@ -69,6 +69,50 @@ int choiceSelection(string title, const vector<string>& textChoice) {
     }
 }
 
+int choiceSelectionNoClearTerminal(string title, const vector<string>& textChoice) {
+    vector<string> options = textChoice;
+    int choice = 0;
+    int highlight = 0;
+
+    while (true) {
+
+        cout << title << endl;
+
+        for (int i = 0; i < static_cast<int>(options.size()); ++i) {
+            if (i == highlight) {
+                cout << BOLD << UNDERLINE << "> "; // แสดงเครื่องหมาย > สำหรับตัวเลือกที่ถูกไฮไลต์
+            }
+            else
+                cout << "  "; // แสดงช่องว่างสำหรับตัวเลือกอื่น
+                
+            cout << options[i] << CLOSEUNDERLINE << CLOSEBOLD << endl;
+        }
+
+        cout << "\n Use \"arrow keys\" to select the options, Press \"Enter\" to select. \n\n";
+
+        int c = _getch();
+
+        if (c == 0 || c == 224) {
+            c = _getch(); // อ่านค่าเพิ่มเติมสำหรับปุ่มลูกศร
+        }
+
+        switch (c) {
+            case 72: // ลูกศรขึ้น
+                highlight = (highlight == 0) ? static_cast<int>(options.size()) - 1 : highlight - 1;
+                break;
+            case 80: // ลูกศรลง
+                highlight = (highlight == static_cast<int>(options.size()) - 1) ? 0 : highlight + 1;
+                break;
+            case 13: // ปุ่ม Enter
+                choice = highlight;
+                // cout << "You chose: " << choice << endl;
+                return choice;
+            default:
+                break;
+        }
+    }
+}
+
 vector<string> listJsonFile() {
 
     vector<string> listJsonFile = {};
