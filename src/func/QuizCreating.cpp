@@ -14,7 +14,7 @@ void QuizCreating() {
 
     cout << "[Theerapat's Modules] \n\n";
     cout << "Quiz Creating" << endl;
-
+    
     cout << "Press any key to continue..." << endl;
     _getch();
 
