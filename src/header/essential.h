@@ -9,6 +9,7 @@ using namespace std;
 
 // [Essentials Modules]
 int choiceSelection(string title, const vector<string>& textChoice);
+int choiceSelectionNoClearTerminal(string title, const vector<string>& textChoice);
 vector<string> listJsonFile();
 string generateUUID();
 
