@@ -55,7 +55,7 @@ bool confirmDeletion(const string &filename) {
 }
 
 void deleteFile() {
-    fs::path directory = "D:\\Quiz\\QuizApp\\src\\data";
+    fs::path directory = "src/data/";
     string filepath = selectFileFromDirectory(directory);
 
     if (filepath.empty()) {
