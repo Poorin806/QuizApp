@@ -152,7 +152,7 @@ void QuizCreating()
 
         // Define the path where the file will be saved
         string filename = sanitizeFilename(title, quizId);
-        string path = "D:\\Quiz\\QuizApp\\src\\data\\" + filename;
+        string path = "src/data/" + filename;
 
         // Save JSON to file
         ofstream file(path);

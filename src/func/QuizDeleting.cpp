@@ -35,13 +35,13 @@ string selectFileFromDirectory(const fs::path &directory) {
     // ใช้ choiceSelection เพื่อให้ผู้ใช้เลือกไฟล์
     int choice = choiceSelection("Select a JSON file to delete:", fileNames);
 
-    if (choice == -1 || choice >= fileNames.size()) {
-        return ""; // ถ้าผู้ใช้ไม่เลือกไฟล์หรือเลือกตัวเลือกที่ไม่ถูกต้อง
+    if (choice == -1 || choice >=  static_cast<int>(fileNames.size())) {
+        return "";
     }
 
     // ถ้าผู้ใช้เลือก "Back"
-    if (choice == fileNames.size() - 1) {
-        return ""; // การเลือก "Back" จะคืนค่าเป็นสตริงว่างเพื่อบ่งชี้ว่าต้องการกลับ
+    if (choice == static_cast<int>(fileNames.size()) - 1) {
+        return ""; 
     }
 
     return jsonFiles[choice].string();
