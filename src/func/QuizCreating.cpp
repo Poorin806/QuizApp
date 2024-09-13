@@ -63,10 +63,10 @@ string createQuestionList(int numQuestions)
             options.push_back(option);
         }
 
-        int answerIndex = choiceSelectionNoClearTerminal("Select the Correct Answer for question " + to_string(i + 1) + ":", vector<string>(answerOptions.begin(), answerOptions.begin() + numChoices));
+        int answerIndex = choiceSelection("Select the Correct Answer for question " + to_string(i + 1) + ":", vector<string>(answerOptions.begin(), answerOptions.begin() + numChoices));
         string answer = answerOptions[answerIndex];
 
-        int difficulty = choiceSelectionNoClearTerminal("Select Difficulty for question " + to_string(i + 1) + ":", difficultyOptions) + 1;
+        int difficulty = choiceSelection("Select Difficulty for question " + to_string(i + 1) + ":", difficultyOptions) + 1;
         difficultyStr = difficultyOptions[difficulty - 1];
 
         cout << "Enter Point Value: ";
@@ -125,7 +125,7 @@ void QuizCreating()
         cout << "Enter the author name: ";
         getline(cin, author);
 
-        int diffQuiz = choiceSelectionNoClearTerminal("Select the Quiz Difficulty:", {"Easy", "Medium", "Hard"});
+        int diffQuiz = choiceSelection("Select the Quiz Difficulty:", {"Easy", "Medium", "Hard"});
         diff = (diffQuiz == 0) ? "Easy" : (diffQuiz == 1) ? "Medium" : "Hard";
 
         int numQuestions;
