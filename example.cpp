@@ -15,19 +15,19 @@ int main() {
 
     system("cls");
 
-    // // [Read JSON File]
-    // ifstream readJson("src/data/test.json");
+    // [Read JSON File]
+    ifstream readJson("src/data/SPTest.json");
 
-    // if (!readJson.is_open()) {
-    //     cout << "Unable to open file" << endl;
-    //     return 1;
-    // }
-    // json data;
-    // readJson >> data;
+    if (!readJson.is_open()) {
+        cout << "Unable to open file" << endl;
+        return 1;
+    }
+    json data;
+    readJson >> data;
 
-    // string name = data["question"][0]["title"];
+    string name = data["questionList"][1]["title"];
 
-    // cout << name << endl;
+    cout << name << endl;
 
     // [Write JSON File]
     json mockupWriteJsonData = {

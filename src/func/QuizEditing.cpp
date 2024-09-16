@@ -74,7 +74,14 @@ void QuizEditing() {
             continue;
         }
 
+        // Json File Details
         while (true) {
+
+            // Re-read the JSON file (In case of updating data)
+            ifstream readJson(filepath);
+            json data;
+            readJson >> data;
+            readJson.close();
 
             // Let the user choose what to edit
             int editChoice = choiceSelection(
@@ -83,27 +90,16 @@ void QuizEditing() {
                     "Author: " + to_string(data["author"]),
                     "Quiz title: " + to_string(data["title"]),
                     "Description: " + to_string(data["description"]),
-                    "Quiz questions (total = " + to_string(data["questionList"].size()) + ")",
+                    "Quiz questions (total = " + to_string(data["questionList"].size()) + ")\n",
                     "Back"
                 }
             );
 
-            switch (editChoice) {
-                case 0: // Edit the author
-                    EditQuizInfo(data, filepath, "author");
-                    break;
-                case 1: // Edit the title
-                    EditQuizInfo(data, filepath, "title");
-                    break;
-                case 2: // Edit the description
-                    EditQuizInfo(data, filepath, "description");
-                    break;
-                case 3: // Edit the quiz questions
-                    EditQuizQuestions(data, filepath);
-                    return;
-                default: // Exit if "Back" or any unexpected choice
-                    return;
-            }
+            if (editChoice == 0) EditQuizInfo(data, filepath, "author");
+            else if (editChoice == 1) EditQuizInfo(data, filepath, "title");
+            else if (editChoice == 2) EditQuizInfo(data, filepath, "description");
+            else if (editChoice == 3) EditQuizQuestions(data, filepath);
+            else if (editChoice == 4) break; // Back
 
         }
 
@@ -293,7 +289,306 @@ void EditQuizQuestions(json fileData, const string filepath) {
             }
 
         } else if (action == 1) { // Edit questions
-            cout << "You chose to edit a question" << endl;
+            
+            vector<string> questionTitleList;
+            for (int i = 0; i < static_cast<int>(questionList.size()); i++) {
+
+                string tmpQuestionTitle = "[" + to_string(i + 1) + "] " + questionList[i]["title"].dump();
+                if (i == 0) questionTitleList.push_back("[X] Back / Cancel\n");   // Index 0 = Back or Cancelled
+                questionTitleList.push_back(tmpQuestionTitle);
+            }
+
+            int questionEditIndex = choiceSelection(
+                "[Quiz - Editing]\n-= Edit the questions =-\n\n"
+                "* Select the question that you would like to edit.\n",
+                questionTitleList
+            );
+
+            // Check if user selected back or not
+            if (questionEditIndex == 0) continue;
+            else questionEditIndex--; // devalue by 1 for arrays (cause, by default 0 = back)
+
+            string editQuestionTitle = questionList[questionEditIndex]["title"].get<string>();
+            string editQuestionDifficulty = questionList[questionEditIndex]["difficulty"].get<string>();
+            int editQuestionPoint = questionList[questionEditIndex]["point"].get<int>();
+
+            string editQuestionChoicesA = questionList[questionEditIndex]["question"]["A"].get<string>();
+            string editQuestionChoicesB = questionList[questionEditIndex]["question"]["B"].get<string>();
+            string editQuestionChoicesC = questionList[questionEditIndex]["question"]["C"].get<string>();
+            string editQuestionChoicesD = questionList[questionEditIndex]["question"]["D"].get<string>();
+            string editQuestionChoicesAnswer = questionList[questionEditIndex]["question"]["answer"].get<string>();
+
+            int questionEditType = choiceSelection(
+                "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                "* Select the question that you would like to edit.\n",
+                {
+                    "[X] Back / Cancel\n",
+                    "Question Title: " + editQuestionTitle,
+                    "[A]: " + editQuestionChoicesA,
+                    "[B]: " + editQuestionChoicesB,
+                    "[C]: " + ((editQuestionChoicesC == "" || editQuestionChoicesC.empty()) ? "None" : editQuestionChoicesC),
+                    "[D]: " + ((editQuestionChoicesD == "" || editQuestionChoicesD.empty()) ? "None" : editQuestionChoicesD),
+                    "Answer: " + editQuestionChoicesAnswer,
+                    "Point: " + to_string(editQuestionPoint),
+                    "Difficulty: " + editQuestionDifficulty
+                }
+            );
+
+            if (questionEditType == 0) continue;    // If user didn't select question edit type
+
+            // Question Title Edit
+            if (questionEditType == 1) {
+
+                string newQuestionTitle;
+
+                cout << endl;
+                cout << "* Enter new title (type \"-\" to cancel): ";
+                getline(cin, newQuestionTitle);
+
+                if (newQuestionTitle == "-") continue;
+                
+                // Confirmation
+                int editConfirmation = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Are you sure to change this information?\n\n"
+                    "\t - Current Question Title: " + editQuestionTitle + "\n"
+                    "\t - New Question Title: " + newQuestionTitle + "\n\n",
+                    {"Comfirm", "Cancel"}
+                );
+                if (editConfirmation == 1) continue;    // Cancel
+
+                // Confirm
+                questionList[questionEditIndex]["title"] = newQuestionTitle;
+                fileData["questionList"] = (questionList);
+
+                ofstream writeJson(filepath);
+                writeJson << setw(4) << fileData << endl;
+
+                cout << "* Edit question title completed!" << endl << endl;
+                cout << "Press any key to continue..." << endl;
+
+            }
+
+            // Question Point Edit
+            if (questionEditType == 7) {
+
+                int newQuestionPoint = 0;
+
+                cout << endl;
+                cout << "* Enter new question point (type \"-1\" to cancel): ";
+                cin >> newQuestionPoint;
+                if (newQuestionPoint < 0) continue;
+
+                // Confirmation
+                int editConfirmation = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Are you sure to change this information?\n\n"
+                    "\t - Current Question Point: " + to_string(editQuestionPoint) + "\n"
+                    "\t - New Question Point: " + to_string(newQuestionPoint) + "\n\n",
+                    {"Comfirm", "Cancel"}
+                );
+                if (editConfirmation == 1) continue;    // Cancel
+
+                // Confirm
+                questionList[questionEditIndex]["point"] = newQuestionPoint;
+                fileData["questionList"] = (questionList);
+
+                ofstream writeJson(filepath);
+                writeJson << setw(4) << fileData << endl;
+
+                cout << "* Edit question title completed!" << endl << endl;
+                cout << "Press any key to continue..." << endl;
+
+            }
+
+            // Question Choice Edit (A-D)
+            if (questionEditType >= 2 && questionEditType <= 5) {
+                string newChoicesData;
+                string currentEditChoice;
+                string currentEditChoiceData;
+
+                cout << endl;
+
+                switch (questionEditType) {
+                    case 2: {
+                        // A
+                        currentEditChoice = 'A';
+                        currentEditChoiceData = editQuestionChoicesA;
+                        cout << "* Enter new [A] question choice (type \"cancel\" to cancel): ";
+                        break;
+                    }
+                    case 3: {
+                        // B
+                        currentEditChoice = 'B';
+                        currentEditChoiceData = editQuestionChoicesB;
+                        cout << "* Enter new [B] question choice (type \"cancel\" to cancel): ";
+                        break;
+                    }
+                    case 4: {
+                        // C
+                        currentEditChoice = 'C';
+                        currentEditChoiceData = editQuestionChoicesC;
+                        cout << "* Enter new [C] question choice (type \"cancel\" to cancel): ";
+                        break;
+                    }
+                    case 5: {
+                        // D
+                        currentEditChoice = 'D';
+                        currentEditChoiceData = editQuestionChoicesD;
+                        cout << "* Enter new [D] question choice (type \"cancel\" to cancel): ";
+                        break;
+                    }
+                }
+
+                getline(cin, newChoicesData);
+                if (newChoicesData == "cancel") continue;
+
+                // Confirmation
+                int editConfirmation = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Are you sure to change this information?\n\n"
+                    "\t - Current Question Choice [" + currentEditChoice + "]: " + currentEditChoiceData + "\n"
+                    "\t - New Question Choice: [" + currentEditChoice + "]: " + newChoicesData + "\n\n",
+                    {"Comfirm", "Cancel"}
+                );
+                if (editConfirmation == 1) continue;    // Cancel
+
+                // Confirm
+                questionList[questionEditIndex]["question"][currentEditChoice] = newChoicesData;
+                fileData["questionList"] = (questionList);
+
+                ofstream writeJson(filepath);
+                writeJson << setw(4) << fileData << endl;
+
+                cout << "* Edit question title completed!" << endl << endl;
+                cout << "Press any key to continue..." << endl;
+
+            }
+
+            // Question Answer Edit
+            if (questionEditType == 6) {
+
+                string newAnswer;
+
+                vector<string> currentChoice;
+                int dynamicCancelChoice = 4;
+
+                // Current Choice Checking
+                if (editQuestionChoicesD.empty() || editQuestionChoicesD == "") {
+
+                    // 2 Choices (A & B)
+                    if (editQuestionChoicesC.empty() || editQuestionChoicesC == "") {
+                        currentChoice.push_back("[A] " + editQuestionChoicesA);
+                        currentChoice.push_back("[B] " + editQuestionChoicesB + "\n");
+                        dynamicCancelChoice = 2;
+                    } else {    // 3 Choices (A & B & C)
+                        currentChoice.push_back("[A] " + editQuestionChoicesA);
+                        currentChoice.push_back("[B] " + editQuestionChoicesB);
+                        currentChoice.push_back("[C] " + editQuestionChoicesC + "\n");
+                        dynamicCancelChoice = 3;
+                    }
+
+                } else {
+                        currentChoice.push_back("[A] " + editQuestionChoicesA);
+                        currentChoice.push_back("[B] " + editQuestionChoicesB);
+                        currentChoice.push_back("[C] " + editQuestionChoicesC);
+                        currentChoice.push_back("[D] " + editQuestionChoicesD + "\n");
+                }
+
+                currentChoice.push_back("Cancel");
+
+                // Select (Edit) the answer
+                int editDifficultyChoice = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Select the answer\n",
+                    currentChoice
+                );
+                if (editDifficultyChoice == dynamicCancelChoice) continue;    // Cancel
+
+                switch (editDifficultyChoice) {
+                    case 0:
+                        newAnswer = "A";
+                        break;
+                    case 1:
+                        newAnswer = "B";
+                        break;
+                    case 2:
+                        newAnswer = "C";
+                        break;
+                    case 3:
+                        newAnswer = "D";
+                        break;
+                }
+
+                // Confirmation
+                int editConfirmation = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Are you sure to change this information?\n\n"
+                    "\t - Current Answer: " + editQuestionChoicesAnswer + "\n"
+                    "\t - New Answer: " + newAnswer + "\n\n",
+                    {"Comfirm", "Cancel"}
+                );
+                if (editConfirmation == 1) continue;    // Cancel
+
+                // Confirm
+                questionList[questionEditIndex]["question"]["answer"] = newAnswer;
+                fileData["questionList"] = (questionList);
+
+                ofstream writeJson(filepath);
+                writeJson << setw(4) << fileData << endl;
+
+                cout << "* Edit question title completed!" << endl << endl;
+                cout << "Press any key to continue..." << endl;
+
+            }
+
+            // Edit Question Difficulty
+            if (questionEditType == 8) {
+
+                string newDifficulty;
+
+                // Select (Edit) the difficulty
+                int editDifficultyChoice = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Select the difficulty\n",
+                    { "Easy", "Normal", "Hard\n", "Cancel" }
+                );
+                if (editDifficultyChoice == 3) continue;    // Cancel
+
+                switch (editDifficultyChoice) {
+                    case 0:
+                        newDifficulty = "easy";
+                        break;
+                    case 1:
+                        newDifficulty = "normal";
+                        break;
+                    case 2:
+                        newDifficulty = "hard";
+                        break;
+                }
+
+                // Confirmation
+                int editConfirmation = choiceSelection(
+                    "[Quiz - Editing]\n\n-= Edit the questions =-\n\n"
+                    "* Are you sure to change this information?\n\n"
+                    "\t - Current Difficulty: " + editQuestionDifficulty + "\n"
+                    "\t - New Difficulty: " + newDifficulty + "\n\n",
+                    {"Comfirm", "Cancel"}
+                );
+                if (editConfirmation == 1) continue;    // Cancel
+
+                // Confirm
+                questionList[questionEditIndex]["difficulty"] = newDifficulty;
+                fileData["questionList"] = (questionList);
+
+                ofstream writeJson(filepath);
+                writeJson << setw(4) << fileData << endl;
+
+                cout << "* Edit question title completed!" << endl << endl;
+                cout << "Press any key to continue..." << endl;
+
+            }
+
             _getch();
 
         } else if (action == 2) { // Delete questions
@@ -302,7 +597,7 @@ void EditQuizQuestions(json fileData, const string filepath) {
             for (int i = 0; i < static_cast<int>(questionList.size()); i++) {
 
                 string tmpQuestionTitle = "[" + to_string(i + 1) + "] " + questionList[i]["title"].dump();
-
+                if (i == 0) questionTitleList.push_back("[X] Back / Cancel\n");   // Index 0 = Back or Cancelled
                 questionTitleList.push_back(tmpQuestionTitle);
             }
 
@@ -311,6 +606,10 @@ void EditQuizQuestions(json fileData, const string filepath) {
                 "* Select the question that you would like to delete.\n",
                 questionTitleList
             );
+
+            // Check if user selected back or not
+            if (questionDeleteIndex == 0) continue;
+            else questionDeleteIndex--; // devalue by 1 for arrays (cause, by default 0 = back)
 
             int deleteConfirmation = choiceSelection(
                 "[Quiz - Editing]\n\n-= Delete the questions =-\n\n"
@@ -342,4 +641,6 @@ void EditQuizQuestions(json fileData, const string filepath) {
             }
         }
     }
+
+    return;
 }
