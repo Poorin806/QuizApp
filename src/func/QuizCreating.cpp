@@ -6,10 +6,10 @@
 #include "../header/essential.h"
 using namespace std;
 
-// ฟังก์ชันสำหรับสร้าง JSON ในรูปแบบสตริง
 string createJSON(const string &quizId, const string &author, const string &title, const string &description, const string &diff, const string &questionList)
 {
-    string json = "{\n";
+    string json = "\n";
+    json += "{ \n";
     json += "  \"quizId\": \"" + quizId + "\",\n";
     json += "  \"author\": \"" + author + "\",\n";
     json += "  \"title\": \"" + title + "\",\n";
@@ -20,8 +20,7 @@ string createJSON(const string &quizId, const string &author, const string &titl
     return json;
 }
 
-// ฟังก์ชันสำหรับสร้างรายการคำถามในรูปแบบ JSON
-string createQuestionList(int numQuestions)
+string createQuestionList(int numQuestions,string title)
 {
     vector<string> difficultyOptions = {"Easy", "Medium", "Hard"};
     vector<string> answerOptions = {"A", "B", "C", "D"};
@@ -33,7 +32,7 @@ string createQuestionList(int numQuestions)
             questions += ",\n";
         questions += "  {\n";
         questions += "    \"no\": " + to_string(i + 1) + ",\n";
-    
+
         string title, difficultyStr;
         int point, numChoices;
         vector<string> options;
@@ -43,7 +42,7 @@ string createQuestionList(int numQuestions)
         cout << "Question " << i + 1 << " (or type 'cancel' to cancel): ";
         getline(cin, title);
         if (title == "cancel")
-            return ""; // กรณีผู้ใช้ต้องการยกเลิก
+            return ""; // ยกเลิก
 
         while (true)
         {
@@ -52,7 +51,7 @@ string createQuestionList(int numQuestions)
             cin.ignore();
             if (numChoices >= 2 && numChoices <= 4)
                 break;
-            cout << "Invalid number of choices. Please enter a valid number.\n";
+            cout << "Plese enter number of choices 2 - 4\n";
         }
 
         for (int j = 0; j < numChoices; ++j)
@@ -63,15 +62,22 @@ string createQuestionList(int numQuestions)
             options.push_back(option);
         }
 
-        int answerIndex = choiceSelection("Select the Correct Answer for question " + to_string(i + 1) + ":", vector<string>(answerOptions.begin(), answerOptions.begin() + numChoices));
-        string answer = answerOptions[answerIndex];
+        vector<string> displayOptions;
+        for (int j = 0; j < numChoices; ++j)
+        {
+            displayOptions.push_back(answerOptions[j] + ": " + options[j]);
+        }
 
-        int difficulty = choiceSelection("Select Difficulty for question " + to_string(i + 1) + ":", difficultyOptions) + 1;
+        int answerIndex = choiceSelection("Select the Correct Answer for question " + title + ":", displayOptions);
+
+        string answer = options[answerIndex];
+
+        int difficulty = choiceSelection("Select Difficulty for question " + title + ":", difficultyOptions) + 1;
         difficultyStr = difficultyOptions[difficulty - 1];
 
         cout << "Enter Point Value: ";
         cin >> point;
-        cin.ignore(); // ล้างบัฟเฟอร์ newline
+        cin.ignore();
         if (point < 0)
         {
             cout << "Invalid point value. Operation canceled.\n";
@@ -96,12 +102,10 @@ string createQuestionList(int numQuestions)
     return questions;
 }
 
-// ฟังก์ชันสำหรับแปลงชื่อไฟล์
-string sanitizeFilename(const string &title, const string &quizId)
+string convertFilename(const string &title, const string &quizId)
 {
     string filename = title + "_" + quizId;
-    // แทนที่ช่องว่างด้วย _
-    replace(filename.begin(), filename.end(), ' ', '_');
+
     return filename + ".json";
 }
 
@@ -112,7 +116,7 @@ void QuizCreating()
     cout << "[Theerapat's Modules] \n\n";
     cout << "Quiz Creating" << endl;
 
-    string quizId = generateUUID(); // Automatically generate UUID
+    string quizId = generateUUID();
     string author, title, description, diff;
 
     while (true)
@@ -126,7 +130,19 @@ void QuizCreating()
         getline(cin, author);
 
         int diffQuiz = choiceSelection("Select the Quiz Difficulty:", {"Easy", "Medium", "Hard"});
-        diff = (diffQuiz == 0) ? "Easy" : (diffQuiz == 1) ? "Medium" : "Hard";
+
+        if (diffQuiz == 0)
+        {
+            diff = "Easy";
+        }
+        else if (diffQuiz == 1)
+        {
+            diff = "Medium";
+        }
+        else
+        {
+            diff = "Hard";
+        }
 
         int numQuestions;
         cout << "Enter the number of questions (Maximum 100): ";
@@ -138,27 +154,18 @@ void QuizCreating()
             cout << "Invalid number of questions. Please enter a valid number.\n";
             continue;
         }
-        // Create the list of questions
-        string questionList = createQuestionList(numQuestions);
 
-        if (questionList.empty())
-        {
-            cout << "Operation canceled. Returning to menu...\n";
-            return; // Go back to the main menu
-        }
+        string questionList = createQuestionList(numQuestions,title);
 
-        // Create JSON
-        string json = createJSON(quizId, author, title, description, diff ,questionList);
+        string json = createJSON(quizId, author, title, description, diff, questionList);
 
-        // Define the path where the file will be saved
-        string filename = sanitizeFilename(title, quizId);
+        string filename = convertFilename(title, quizId);
         string path = "src/data/" + filename;
 
-        // Save JSON to file
         ofstream file(path);
         if (file.is_open())
         {
-            file << json; // Write JSON to file
+            file << json;
             file.close();
             cout << "JSON File successfully created at " << path << endl;
         }
