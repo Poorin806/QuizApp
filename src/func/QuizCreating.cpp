@@ -14,7 +14,7 @@ string createJSON(const string &quizId, const string &author, const string &titl
     json += "  \"author\": \"" + author + "\",\n";
     json += "  \"title\": \"" + title + "\",\n";
     json += "  \"description\": \"" + description + "\",\n";
-    json += "  \"difficulty of Quiz\": \"" + diff + "\",\n";
+    json += "  \"difficulty\": \"" + diff + "\",\n";
     json += "  \"questionList\": " + questionList + "\n";
     json += "}\n";
     return json;
@@ -22,7 +22,7 @@ string createJSON(const string &quizId, const string &author, const string &titl
 
 string createQuestionList(int numQuestions,string title)
 {
-    vector<string> difficultyOptions = {"Easy", "Medium", "Hard"};
+    vector<string> difficultyOptions = {"Easy", "Normal", "Hard"};
     vector<string> answerOptions = {"A", "B", "C", "D"};
 
     string questions = "[\n";
@@ -129,7 +129,7 @@ void QuizCreating()
         cout << "Enter the author name: ";
         getline(cin, author);
 
-        int diffQuiz = choiceSelection("Select the Quiz Difficulty:", {"Easy", "Medium", "Hard"});
+        int diffQuiz = choiceSelection("Select the Quiz Difficulty:", {"Easy", "Normal", "Hard"});
 
         if (diffQuiz == 0)
         {
@@ -137,7 +137,7 @@ void QuizCreating()
         }
         else if (diffQuiz == 1)
         {
-            diff = "Medium";
+            diff = "Normal";
         }
         else
         {
