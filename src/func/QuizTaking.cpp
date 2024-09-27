@@ -15,7 +15,7 @@ void QuizTaking() {
     int totalScore = 0;
     int lastScore = 0;
     double percentage = 0.0; 
-    string testTitle, testDescription, testAuthor;
+    string testTitle, testDescription, testAuthor,testdif;
     int totalPoints = 0;
 
     while (true) {
@@ -47,41 +47,45 @@ void QuizTaking() {
         testTitle = quizData["title"]; 
         testDescription = quizData["description"];
         testAuthor = quizData["author"];
+        testdif = quizData["difficulty"];
         int totalQuiz = quizData["questionList"].size();
         totalPoints = 0;
-        string difficulty = "Normal"; 
-
-       
         for (const auto& questionItem : quizData["questionList"]) {
             totalPoints += questionItem["point"].get<int>(); // 
         }
-
         cout << "[QUIZ - Taking a test]\n\n";
         cout << "** " << testTitle << " **\n";
         cout << "Description: " << testDescription << endl;
         cout << "Author: " << testAuthor << endl;
         cout << "Total Quiz: " << totalQuiz << " (" << totalPoints << " Points)" << endl;
-        cout << "Difficulty: " << difficulty << endl;
+        cout << "Difficulty: " << testdif << endl;
         cout << "   \n" ;
         system("pause");
         system("cls");
-
         totalScore = 0;
-
         for (const auto& questionItem : quizData["questionList"]) {
             string no = to_string(questionItem["no"].get<int>());
             string questionTitle = questionItem["title"];
             auto choices = questionItem["question"];
             string correctAnswer = choices["answer"].get<string>();
             int point = questionItem["point"];
+            string dif = questionItem["difficulty"];
 
      
-            vector<string> listChoice = {
-                "[A] " + choices["A"].get<string>(),
-                "[B] " + choices["B"].get<string>(),
-                "[C] " + choices["C"].get<string>(),
-                "[D] " + choices["D"].get<string>()
-            };
+            vector<string> listChoice;
+                if (choices.contains("A")&& !choices["A"].get<string>().empty()) {
+        listChoice.push_back("[A] " + choices["A"].get<string>());
+    }
+                if (choices.contains("B")&& !choices["B"].get<string>().empty()) {
+        listChoice.push_back("[B] " + choices["B"].get<string>());
+    }
+                if (choices.contains("C")&& !choices["C"].get<string>().empty()) {
+        listChoice.push_back("[C] " + choices["C"].get<string>());
+    }
+                if (choices.contains("D")&& !choices["D"].get<string>().empty()) {
+        listChoice.push_back("[D] " + choices["D"].get<string>());
+    } 
+            
 
             int choice = choiceSelection(
                 "[Quiz App - Taking a test] \n\n" +
