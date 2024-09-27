@@ -47,7 +47,7 @@ void QuizTaking() {
         testTitle = quizData["title"]; 
         testDescription = quizData["description"];
         testAuthor = quizData["author"];
-        testdif = quizData["difficulty"];
+        testdif = quizData["difficulty of Quiz"];
         int totalQuiz = quizData["questionList"].size();
         totalPoints = 0;
         for (const auto& questionItem : quizData["questionList"]) {
@@ -90,7 +90,7 @@ void QuizTaking() {
             int choice = choiceSelection(
                 "[Quiz App - Taking a test] \n\n" +
                 no + ". " + questionTitle + "\n",
-                listChoice
+                listChoice 
             );
             system("cls");
 
