@@ -20,7 +20,7 @@ string createJSON(const string &quizId, const string &author, const string &titl
     return json;
 }
 
-string createQuestionList(int numQuestions,string title)
+string createQuestionList(int numQuestions, string title)
 {
     vector<string> difficultyOptions = {"Easy", "Normal", "Hard"};
     vector<string> answerOptions = {"A", "B", "C", "D"};
@@ -42,16 +42,39 @@ string createQuestionList(int numQuestions,string title)
         cout << "Question " << i + 1 << " (or type 'cancel' to cancel): ";
         getline(cin, title);
         if (title == "cancel")
-            return ""; // ยกเลิก
+            return "";
 
         while (true)
         {
+            string numChoicesInput;
+            bool checkNum = true;
             cout << "Enter the number of choices (Minimum 2, Maximum 4): ";
-            cin >> numChoices;
-            cin.ignore();
-            if (numChoices >= 2 && numChoices <= 4)
-                break;
-            cout << "Plese enter number of choices 2 - 4\n";
+            getline(cin, numChoicesInput);
+            for (char check : numChoicesInput)
+            {
+                if (!isdigit(check))
+                {
+                    checkNum = false;
+                    break;
+                }
+            }
+
+            if (checkNum == false)
+            {
+                system("cls");
+                cout << "Invalid Number is Text. Plese enter Number.\n";
+                continue;
+            }
+
+            numChoices = stoi(numChoicesInput);
+
+            if (numChoices < 2 || numChoices > 4)
+            {
+                system("cls");
+                cout << "Plese enter number of choices 2 - 4\n";
+                continue;
+            }
+            break;
         }
 
         for (int j = 0; j < numChoices; ++j)
@@ -80,6 +103,7 @@ string createQuestionList(int numQuestions,string title)
         cin.ignore();
         if (point < 0)
         {
+            system("cls");
             cout << "Invalid point value. Operation canceled.\n";
             return "";
         }
@@ -122,12 +146,36 @@ void QuizCreating()
     while (true)
     {
         cout << "Quiz ID generated: " << quizId << endl;
-        cout << "Enter the quiz title: ";
-        getline(cin, title);
+        while (true)
+        {
+            cout << "Enter the quiz title: ";
+            getline(cin, title);
+            int len = title.length();
+            if (len == 0)
+            {
+                system("cls");
+                cout << "Tile Can't NULL Plese Enter Text Title." << endl;
+                continue;
+            }
+            break;
+        }
+
         cout << "Enter the quiz description (Optional): ";
         getline(cin, description);
-        cout << "Enter the author name: ";
-        getline(cin, author);
+
+        while (true)
+        {
+            cout << "Enter the author name: ";
+            getline(cin, author);
+            int len = author.length();
+            if (len == 0)
+            {
+                system("cls");
+                cout << "Tile Can't NULL Plese Enter Text Name." << endl;
+                continue;
+            }
+            break;
+        }
 
         int diffQuiz = choiceSelection("Select the Quiz Difficulty:", {"Easy", "Normal", "Hard"});
 
@@ -145,18 +193,45 @@ void QuizCreating()
         }
 
         int numQuestions;
-        cout << "Enter the number of questions (Maximum 100): ";
-        cin >> numQuestions;
-        cin.ignore();
-
-        if (numQuestions > 100 || numQuestions < 1)
+        while (true)
         {
-            cout << "Invalid number of questions. Please enter a valid number.\n";
-            continue;
+            string numQuestionInputs;
+            bool checkNum = true;
+            cout << "Enter the number of questions (Maximum 100): ";
+            getline(cin, numQuestionInputs);
+
+            for (char check : numQuestionInputs)
+            {
+                if (!isdigit(check))
+                {
+                    checkNum = false;
+                    break;
+                }
+            }
+
+            if (checkNum == false)
+            {
+                system("cls");
+                cout << "Invalid Number is Text. Plese enter Number.\n";
+                continue;
+            }
+
+            numQuestions = stoi(numQuestionInputs);
+
+            if (numQuestions > 100 || numQuestions < 1)
+            {
+                system("cls");
+                cout << "Invalid Number is Range. Please 1-100.\n";
+                continue;
+            }
+            break;
         }
 
-        string questionList = createQuestionList(numQuestions,title);
-
+        string questionList = createQuestionList(numQuestions, title);
+        if (questionList == "")
+        {
+            return;
+        }
         string json = createJSON(quizId, author, title, description, diff, questionList);
 
         string filename = convertFilename(title, quizId);
