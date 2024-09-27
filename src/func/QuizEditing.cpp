@@ -314,8 +314,21 @@ void EditQuizQuestions(json fileData, const string filepath) {
 
             string editQuestionChoicesA = questionList[questionEditIndex]["question"]["A"].get<string>();
             string editQuestionChoicesB = questionList[questionEditIndex]["question"]["B"].get<string>();
-            string editQuestionChoicesC = questionList[questionEditIndex]["question"]["C"].get<string>();
-            string editQuestionChoicesD = questionList[questionEditIndex]["question"]["D"].get<string>();
+
+            // Handling if there is not a choice C or D
+            string editQuestionChoicesC = "None";
+            string editQuestionChoicesD = "None";
+            if (questionList[questionEditIndex]["question"].contains("C")) {
+                editQuestionChoicesC = questionList[questionEditIndex]["question"]["C"].get<string>();
+                if (questionList[questionEditIndex]["question"].contains("D")) {
+                    editQuestionChoicesD = questionList[questionEditIndex]["question"]["D"].get<string>();
+                } else editQuestionChoicesD = "None";
+            } else {
+                editQuestionChoicesC = "None";
+                editQuestionChoicesD = "None";
+            }
+
+
             string editQuestionChoicesAnswer = questionList[questionEditIndex]["question"]["answer"].get<string>();
 
             int questionEditType = choiceSelection(
@@ -326,8 +339,8 @@ void EditQuizQuestions(json fileData, const string filepath) {
                     "Question Title: " + editQuestionTitle,
                     "[A]: " + editQuestionChoicesA,
                     "[B]: " + editQuestionChoicesB,
-                    "[C]: " + ((editQuestionChoicesC == "" || editQuestionChoicesC.empty()) ? "None" : editQuestionChoicesC),
-                    "[D]: " + ((editQuestionChoicesD == "" || editQuestionChoicesD.empty()) ? "None" : editQuestionChoicesD),
+                    "[C]: " + ((editQuestionChoicesC == "None") ? "None" : editQuestionChoicesC),
+                    "[D]: " + ((editQuestionChoicesD == "None") ? "None" : editQuestionChoicesD),
                     "Answer: " + editQuestionChoicesAnswer,
                     "Point: " + to_string(editQuestionPoint),
                     "Difficulty: " + editQuestionDifficulty
@@ -375,8 +388,16 @@ void EditQuizQuestions(json fileData, const string filepath) {
                 int newQuestionPoint = 0;
 
                 cout << endl;
-                cout << "* Enter new question point (type \"-1\" to cancel): ";
-                cin >> newQuestionPoint;
+                while (true) {  // Loop for validate input
+                    cout << "* Enter new question point (type \"-1\" to cancel): ";
+                    cin >> newQuestionPoint;
+
+                    if (!cin.fail()) break; // break when input is integer
+                    else {
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                    }
+                }
                 if (newQuestionPoint < 0) continue;
 
                 // Confirmation
@@ -433,6 +454,18 @@ void EditQuizQuestions(json fileData, const string filepath) {
                     }
                     case 5: {
                         // D
+
+                        // Handling if choice is is None
+                        if (editQuestionChoicesC == "None") {
+                            system("cls");
+                            cout << "[Quiz - Editing]" << endl;
+                            cout << endl;
+                            cout << "Error: Cannot edit choice D yet, please be sure choice C is not none" << endl;
+                            cout << "Press any key to coninue..." << endl;
+                            _getch();
+                            continue;
+                        }
+
                         currentEditChoice = 'D';
                         currentEditChoiceData = editQuestionChoicesD;
                         cout << "* Enter new [D] question choice (type \"cancel\" to cancel): ";
