@@ -5,35 +5,6 @@
 #include <algorithm>
 #include "../header/essential.h"
 using namespace std;
-string QuestionLisetitle(int numQuestions, string title)
-{
-    
-    for (int i = 0; i < numQuestions; ++i)
-    {
-        while (true)
-        {
-            cout << "[Quiz no. " << i + 1 << " of " << numQuestions << " ]" << endl;
-
-            cout << "Question " << i + 1 << " (or type 'cancel' to cancel): ";
-            getline(cin, title);
-            int checkspace = title.length();
-            // check spacebar //ถึงตรงนี้
-
-            // NULL
-            if (checkspace == 0)
-            {
-                system("cls");
-                cout << "Can't NULL Please Enter Question " << endl;
-                continue;
-            }
-
-            if (title == "cancel")
-                return "";
-            break;
-        }
-    }
-    return (title);
-}
 
 string createJSON(const string &quizId, const string &author, const string &title, const string &description, const string &diff, const string &questionList)
 {
@@ -55,6 +26,7 @@ string createQuestionList(int numQuestions, string title)
     string answerOptions[4] = {"A", "B", "C", "D"};
 
     string questions = "[\n";
+
     for (int i = 0; i < numQuestions; ++i)
     {
         if (i > 0)
@@ -65,8 +37,27 @@ string createQuestionList(int numQuestions, string title)
         string title, difficultyStr;
         int point, numChoices;
         vector<string> options;
+        while (true)
+        {
+            cout << "[Quiz no. " << i + 1 << " of " << numQuestions << " ]" << endl;
 
-        QuestionLisetitle(numQuestions, title);
+            cout << "Question " << i + 1 << " (or type 'cancel' to cancel): ";
+            getline(cin, title);
+            int checkspace = title.length();
+            // check spacebar //ถึงตรงนี้
+
+            // NULL
+            if (checkspace == 0)
+            {
+                system("cls");
+                cout << "Can't NULL Please Enter Question " << endl;
+                continue;
+            }
+
+            if (title == "cancel")
+                return "";
+            break;
+        }
 
         while (true)
         {
@@ -113,8 +104,20 @@ string createQuestionList(int numQuestions, string title)
         for (int j = 0; j < numChoices; ++j)
         {
             string option;
-            cout << "Enter Option " << answerOptions[j] << ": "; //[a,b,c,d]
-            getline(cin, option);
+            while (true)
+            {
+                cout << "Enter Option " << answerOptions[j] << ": "; //[a,b,c,d]
+                getline(cin, option);
+                int checkspace = option.length();
+                if (checkspace == 0)
+                {
+                    system("cls");
+                    cout << "Can't NULL Please Enter Option " << endl;
+                    continue;
+                }
+                break;
+            }
+
             options.push_back(option);
         }
 
