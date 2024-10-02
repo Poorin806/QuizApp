@@ -5,6 +5,35 @@
 #include <algorithm>
 #include "../header/essential.h"
 using namespace std;
+string QuestionLisetitle(int numQuestions, string title)
+{
+    
+    for (int i = 0; i < numQuestions; ++i)
+    {
+        while (true)
+        {
+            cout << "[Quiz no. " << i + 1 << " of " << numQuestions << " ]" << endl;
+
+            cout << "Question " << i + 1 << " (or type 'cancel' to cancel): ";
+            getline(cin, title);
+            int checkspace = title.length();
+            // check spacebar //ถึงตรงนี้
+
+            // NULL
+            if (checkspace == 0)
+            {
+                system("cls");
+                cout << "Can't NULL Please Enter Question " << endl;
+                continue;
+            }
+
+            if (title == "cancel")
+                return "";
+            break;
+        }
+    }
+    return (title);
+}
 
 string createJSON(const string &quizId, const string &author, const string &title, const string &description, const string &diff, const string &questionList)
 {
@@ -23,7 +52,7 @@ string createJSON(const string &quizId, const string &author, const string &titl
 string createQuestionList(int numQuestions, string title)
 {
     vector<string> difficultyOptions = {"Easy", "Normal", "Hard"};
-    vector<string> answerOptions = {"A", "B", "C", "D"};
+    string answerOptions[4] = {"A", "B", "C", "D"};
 
     string questions = "[\n";
     for (int i = 0; i < numQuestions; ++i)
@@ -37,12 +66,7 @@ string createQuestionList(int numQuestions, string title)
         int point, numChoices;
         vector<string> options;
 
-        cout << "[Quiz no. " << i + 1 << " of " << numQuestions << " ]" << endl;
-
-        cout << "Question " << i + 1 << " (or type 'cancel' to cancel): ";
-        getline(cin, title);
-        if (title == "cancel")
-            return "";
+        QuestionLisetitle(numQuestions, title);
 
         while (true)
         {
@@ -50,6 +74,15 @@ string createQuestionList(int numQuestions, string title)
             bool checkNum = true;
             cout << "Enter the number of choices (Minimum 2, Maximum 4): ";
             getline(cin, numChoicesInput);
+
+            int checkspace = numChoicesInput.length();
+            if (checkspace == 0)
+            {
+                system("cls");
+                cout << "Can't NULL Please Enter Number of Choices " << endl;
+                continue;
+            }
+
             for (char check : numChoicesInput)
             {
                 if (!isdigit(check))
@@ -80,7 +113,7 @@ string createQuestionList(int numQuestions, string title)
         for (int j = 0; j < numChoices; ++j)
         {
             string option;
-            cout << "Enter Option " << answerOptions[j] << ": ";
+            cout << "Enter Option " << answerOptions[j] << ": "; //[a,b,c,d]
             getline(cin, option);
             options.push_back(option);
         }
@@ -88,12 +121,12 @@ string createQuestionList(int numQuestions, string title)
         vector<string> displayOptions;
         for (int j = 0; j < numChoices; ++j)
         {
-            displayOptions.push_back(answerOptions[j] + ": " + options[j]);
+            displayOptions.push_back(answerOptions[j] + ": " + options[j]); // A : 1
         }
 
         int answerIndex = choiceSelection("Select the Correct Answer for question " + title + ":", displayOptions);
 
-        string answer = options[answerIndex];
+        string answer = answerOptions[answerIndex];
 
         int difficulty = choiceSelection("Select Difficulty for question " + title + ":", difficultyOptions) + 1;
         difficultyStr = difficultyOptions[difficulty - 1];
@@ -199,6 +232,14 @@ void QuizCreating()
             bool checkNum = true;
             cout << "Enter the number of questions (Maximum 100): ";
             getline(cin, numQuestionInputs);
+
+            int checkspace = numQuestionInputs.length();
+            if (checkspace == 0)
+            {
+                system("cls");
+                cout << "Can't NULL " << endl;
+                continue;
+            }
 
             for (char check : numQuestionInputs)
             {
