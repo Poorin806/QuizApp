@@ -1,0 +1,139 @@
+{
+	"quizId": "a4f11694-7fdf-4ee5-9f82-ce2e49b4edf8",
+	"author": "Theeraphat Phatjinda",
+	"title": "Math Eng",
+	"description": "",
+	"difficulty": "easy",
+	"questionList": [
+		{
+			"no": 1,
+			"title": "1+1",
+			"question": {
+				"A": "2",
+				"B": "3",
+				"C": "4",
+				"D": "5",
+				"answer": "A"
+			},
+			"difficulty": "easy",
+			"point": 1
+		},
+		{
+			"no": 2,
+			"title": "2*2",
+			"question": {
+				"A": "2",
+				"B": "4",
+				"C": "6",
+				"D": "8",
+				"answer": "B"
+			},
+			"difficulty": "normal",
+			"point": 2
+		},
+		{
+			"no": 3,
+			"title": "5/5",
+			"question": {
+				"A": "5",
+				"B": "0",
+				"C": "1",
+				"D": "ERROR",
+				"answer": "C"
+			},
+			"difficulty": "hard",
+			"point": 3
+		},
+		{
+			"no": 4,
+			"title": "1-6",
+			"question": {
+				"A": "5",
+				"B": "-5",
+				"C": "2",
+				"D": "3",
+				"answer": "B"
+			},
+			"difficulty": "easy",
+			"point": 1
+		},
+		{
+			"no": 5,
+			"title": "20*5",
+			"question": {
+				"A": "25",
+				"B": "50",
+				"C": "75",
+				"D": "100",
+				"answer": "D"
+			},
+			"difficulty": "normal",
+			"point": 2
+		},
+		{
+			"no": 6,
+			"title": "(99+5)-5",
+			"question": {
+				"A": "100",
+				"B": "105",
+				"C": "99",
+				"D": "94",
+				"answer": "C"
+			},
+			"difficulty": "normal",
+			"point": 2
+		},
+		{
+			"no": 7,
+			"title": "8*4",
+			"question": {
+				"A": "8",
+				"B": "16",
+				"C": "24",
+				"D": "32",
+				"answer": "D"
+			},
+			"difficulty": "normal",
+			"point": 2
+		},
+		{
+			"no": 8,
+			"title": "5-9",
+			"question": {
+				"A": "4",
+				"B": "-4",
+				"C": "40",
+				"D": "-40",
+				"answer": "B"
+			},
+			"difficulty": "easy",
+			"point": 1
+		},
+		{
+			"no": 9,
+			"title": "80/5",
+			"question": {
+				"A": "4",
+				"B": "8",
+				"C": "12",
+				"D": "16",
+				"answer": "D"
+			},
+			"difficulty": "hard",
+			"point": 3
+		},
+		{
+			"no": 10,
+			"title": "10+999",
+			"question": {
+				"A": "1010",
+				"B": "1000",
+				"C": "1009",
+				"D": "999",
+				"answer": "C"
+			},
+			"difficulty": "normal",
+			"point": 2
+		}
+	]
+}
