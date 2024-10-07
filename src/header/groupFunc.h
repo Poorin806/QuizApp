@@ -3,6 +3,7 @@
 
 // [Poorin's Modules]
 void QuizEditing();
+void QuizLog();
 
 // [Theerapat's Modules]
 void QuizCreating();

@@ -69,5 +69,6 @@
         }
     ],
     "quizId": "UUID4_quizId",
-    "title": "Mid-term Stuctural Programming Test"
+    "title": "Mid-term Stuctural Programming Test",
+    "difficulty": "easy"
 }
