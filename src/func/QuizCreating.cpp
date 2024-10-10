@@ -238,7 +238,7 @@ void QuizCreating()
             if (len == 0)
             {
                 system("cls");
-                cout << "Tile Can't NULL Plese Enter Text Name.\n";
+                cout << "Author Can't NULL Plese Enter Text Name.\n";
                 continue;
             }
             break;
@@ -312,6 +312,7 @@ void QuizCreating()
         string filename = convertFilename(title, quizId);
         string path = "src/data/" + filename;
 
+        
         ofstream file(path);
         if (file.is_open())
         {
