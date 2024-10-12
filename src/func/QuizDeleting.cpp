@@ -35,7 +35,10 @@ bool confirmDelete(const string &filename)
 void deleteFile()
 {
     fs::path directory = "src/data/";
+    fs::path logdirectory = "src/data/log";
+
     string filepath = selectFileFromDirectory(directory);
+    string logfilepath = filepath;
 
     if (filepath.empty())
     {
@@ -54,6 +57,15 @@ void deleteFile()
             else
             {
                 cout << "File not found: " << filepath << endl;
+            }
+
+            if (fs::remove(logdirectory / logfilepath))
+            {
+                cout << "File successfully deleted: " << logfilepath << endl;
+            }
+            else
+            {
+                cout << "File not found: " << logfilepath << endl;
             }
         }
         catch (const fs::filesystem_error &e)

@@ -50,7 +50,7 @@ string createQuestionList(int numQuestions, string title)
             if (checkspace == 0)
             {
                 system("cls");
-                cout << "Can't NULL Please Enter Question " << endl;
+                cout << "Can't NULL Please Enter Question. \n ";
                 continue;
             }
 
@@ -70,7 +70,7 @@ string createQuestionList(int numQuestions, string title)
             if (checkspace == 0)
             {
                 system("cls");
-                cout << "Can't NULL Please Enter Number of Choices " << endl;
+                cout << "Can't NULL Please Enter Number of Choices. \n";
                 continue;
             }
 
@@ -112,7 +112,7 @@ string createQuestionList(int numQuestions, string title)
                 if (checkspace == 0)
                 {
                     system("cls");
-                    cout << "Can't NULL Please Enter Option " << endl;
+                    cout << "Can't NULL Please Enter Option. \n";
                     continue;
                 }
                 break;
@@ -133,17 +133,47 @@ string createQuestionList(int numQuestions, string title)
 
         int difficulty = choiceSelection("Select Difficulty for question " + title + ":", difficultyOptions) + 1;
         difficultyStr = difficultyOptions[difficulty - 1];
-
-        cout << "Enter Point Value: ";
-        cin >> point;
-        cin.ignore();
-        if (point < 0)
+        while (true)
         {
-            system("cls");
-            cout << "Invalid point value. Operation canceled.\n";
-            return "";
-        }
+            bool checkPoint = true;
+            string pointStr;
+            cout << "Enter Point Value: ";
+            getline(cin, pointStr);
+            int lenPoint = pointStr.length();
 
+            if (lenPoint == 0)
+            {
+                system("cls");
+                cout << "Point is Can't NULL.\n";
+                continue;
+            }
+
+            for (char check : pointStr)
+            {
+                if (!isdigit(check))
+                {
+                    checkPoint = false;
+                    break;
+                }
+            }
+
+            if (checkPoint == false)
+            {
+                system("cls");
+                cout << "Invalid Number is Text. Plese enter Number.\n";
+                continue;
+            }
+
+            point = stoi(pointStr);
+
+            if (point < 0)
+            {
+                system("cls");
+                cout << "Invalid point value. Operation canceled.\n";
+                continue;
+            }
+            break;
+        }
         questions += "    \"title\": \"" + title + "\",\n";
         questions += "    \"question\": {\n";
         for (int j = 0; j < numChoices; ++j)
@@ -182,6 +212,7 @@ void QuizCreating()
     while (true)
     {
         cout << "Quiz ID generated: " << quizId << endl;
+
         while (true)
         {
             cout << "Enter the quiz title: ";
@@ -207,7 +238,7 @@ void QuizCreating()
             if (len == 0)
             {
                 system("cls");
-                cout << "Tile Can't NULL Plese Enter Text Name." << endl;
+                cout << "Author Can't NULL Plese Enter Text Name.\n";
                 continue;
             }
             break;
@@ -240,7 +271,7 @@ void QuizCreating()
             if (checkspace == 0)
             {
                 system("cls");
-                cout << "Can't NULL " << endl;
+                cout << "Can't NULL \n";
                 continue;
             }
 
@@ -281,6 +312,7 @@ void QuizCreating()
         string filename = convertFilename(title, quizId);
         string path = "src/data/" + filename;
 
+        
         ofstream file(path);
         if (file.is_open())
         {
