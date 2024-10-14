@@ -23,16 +23,57 @@ void QuizEditing() {
 
         // Get the list of JSON files and add a "Back" option
         vector<string> jsonFileList = listJsonFile();
-        jsonFileList.push_back("Back");
+
+        // [New]
+        // Formatted: raw json file -> quiz title
+        vector<string> listQuizTitle = {};
+        for (int i = 0; i < static_cast<int>(jsonFileList.size()); i++) {
+
+            // Prepare to read the selected JSON file
+            string filepath = "src/data/" + jsonFileList[i];
+            ifstream readJson(filepath);
+
+            // Check if the JSON file opened successfully
+            if (!readJson.is_open()) {
+                cout << "Unable to open file." << endl;
+                continue;
+            }
+
+            // Check if the JSON file is empty
+            readJson.seekg(0, ios::end);
+            if (readJson.tellg() == 0) {
+                cout << "JSON file is empty." << endl;
+                cout << "Press any key to continue...";
+                readJson.close();
+                _getch();
+                continue;
+            }
+
+            readJson.seekg(0, ios::beg); // Reset the file pointer for reading
+
+            // Read the JSON data
+            json data;
+            readJson >> data;
+            readJson.close();
+
+            string tmpData = data["title"].get<string>();
+
+            listQuizTitle.push_back(
+                (i == static_cast<int>(jsonFileList.size()) - 1) ? tmpData + "\n" : tmpData
+            );
+
+        }
+
+        listQuizTitle.push_back("Back");
 
         // Let the user select a file to edit
         int choice = choiceSelection(
             "[Quiz Editing] \n\nPlease select the file you would like to edit.\n", 
-            jsonFileList
+            listQuizTitle
         );
 
         // Check if the user selected "Back"
-        if (choice == static_cast<int>(jsonFileList.size()) - 1) {
+        if (choice == static_cast<int>(listQuizTitle.size()) - 1) {
             return;
         }
 
