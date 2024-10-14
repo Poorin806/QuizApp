@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <sstream>
+#include <conio.h>
 
 using json = nlohmann::json;
 using namespace std;
@@ -29,13 +30,54 @@ void QuizTaking() {
     {
 
         vector<string> jsonFileList = listJsonFile();
-        jsonFileList.push_back("Back");
+
+        // [New]
+        // Formatted: raw json file -> quiz title
+        vector<string> listQuizTitle = {};
+        for (int i = 0; i < static_cast<int>(jsonFileList.size()); i++) {
+
+            // Prepare to read the selected JSON file
+            string filepath = "src/data/" + jsonFileList[i];
+            ifstream readJson(filepath);
+
+            // Check if the JSON file opened successfully
+            if (!readJson.is_open()) {
+                cout << "Unable to open file." << endl;
+                continue;
+            }
+
+            // Check if the JSON file is empty
+            readJson.seekg(0, ios::end);
+            if (readJson.tellg() == 0) {
+                cout << "JSON file is empty." << endl;
+                cout << "Press any key to continue...";
+                readJson.close();
+                _getch();
+                continue;
+            }
+
+            readJson.seekg(0, ios::beg); // Reset the file pointer for reading
+
+            // Read the JSON data
+            json data;
+            readJson >> data;
+            readJson.close();
+
+            string tmpData = data["title"].get<string>();
+
+            listQuizTitle.push_back(
+                (i == static_cast<int>(jsonFileList.size()) - 1) ? tmpData + "\n" : tmpData
+            );
+
+        }
+
+        listQuizTitle.push_back("Back");
 
         // Show file lists (Quiz lists)
         int choice = choiceSelection(
             "[File Select] \nPlease select the file you want to do.\n",
-            jsonFileList);
-        if (choice != static_cast<int>(jsonFileList.size()) - 1)
+            listQuizTitle);
+        if (choice != static_cast<int>(listQuizTitle.size()) - 1)
         {
 
             system("cls");
